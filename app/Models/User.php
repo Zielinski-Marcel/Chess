@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,5 +46,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function whiteGames(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Game::class, 'white_player_id');
+    }
+
+    public function blackGames(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Game::class, 'black_player_id');
+    }
+
+    public function getAllGamesAttribute()
+    {
+        return $this->whiteGames->merge($this->blackGames);
     }
 }

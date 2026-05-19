@@ -24,7 +24,7 @@ testfront:
 	@docker-compose exec -it app npm run test
 
 migrate:
-	./vendor/bin/sail artisan migrate --seed
+	./vendor/bin/sail artisan migrate:fresh --seed
 
 test:
 	@docker-compose exec -it app php artisan test
