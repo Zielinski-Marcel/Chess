@@ -54,6 +54,9 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->hasRole('super-admin')) {
+            return back()->withErrors(['password' => 'Error']);
+        }
         Auth::logout();
 
         $user->delete();
