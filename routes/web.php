@@ -13,7 +13,7 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [GameController::class, 'playerGames'])->name('dashboard');
     Route::get('/game', [GameController::class, 'index'])->name('game.index');
     Route::get('/game/create', [GameController::class, 'create'])->name('game.create');
@@ -26,12 +26,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/game/{game}/review', [GameReviewController::class, 'show'])->name('game.review');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::post('/moves', [MoveController::class, 'store'])->name('move.store');
     Route::post('/moves/undo', [MoveController::class, 'undo'])->name('move.undo');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
