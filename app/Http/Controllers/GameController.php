@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Actions\CreateGameAction;
 use App\Http\Actions\ResignGameAction;
-use App\Http\Actions\UpdateGameAction;
 use App\Http\Requests\CreateGameRequest;
-use App\Http\Requests\GameEditRequest;
 use App\Http\Requests\ResignGameRequest;
 use App\Models\Game;
 use App\Queries\ActiveGameQuery;
@@ -98,14 +96,4 @@ class GameController extends Controller
 
         return response()->json($action($game, $userId));
     }
-
-    public function edit(string $id) {}
-
-    public function update(UpdateGameAction $action, GameEditRequest $request, string $id)
-    {
-        $action($id, $request->validated());
-        return back();
-    }
-
-    public function destroy(string $id) {}
 }

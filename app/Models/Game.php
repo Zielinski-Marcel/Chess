@@ -24,14 +24,4 @@ class Game extends Model
     {
         return $this->hasMany(Move::class);
     }
-
-    public function whitePlayer()
-    {
-        return $this->belongsTo(User::class, 'white_player_id');
-    }
-
-    public function blackPlayer()
-    {
-        return $this->belongsTo(User::class, 'black_player_id');
-    }
 }
