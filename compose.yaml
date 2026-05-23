@@ -1,92 +1,52 @@
 services:
-    laravel.test:
+    app:
         build:
-            context: ./vendor/laravel/sail/runtimes/8.4
+            context: .
             dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.4/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - "10000:10000"
         environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
+            APP_NAME: "Chess Engine"
+            APP_ENV: local
+            APP_KEY: base64:bL0+k9IThxt0lAqrDvWkf0FPYRdljhmxtImHwqnf3pw=
+            APP_DEBUG: "true"
+            APP_URL: http://localhost:10000
+
+            DB_CONNECTION: pgsql
+            DB_HOST: db
+            DB_PORT: 5432
+            DB_DATABASE: chess
+            DB_USERNAME: chess
+            DB_PASSWORD: secret
+
+            SESSION_DRIVER: database
+            CACHE_STORE: database
+            QUEUE_CONNECTION: sync
+
+            MAIL_MAILER: log
+            MAIL_FROM_ADDRESS: noreply@chess.local
+            MAIL_FROM_NAME: "Chess Engine"
+
+            VITE_APP_NAME: "Chess Engine"
         depends_on:
-            - mysql
-            - mailpit
-            - pgsql
-    mysql:
-        image: 'mysql:8.4'
-        ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
+            db:
+                condition: service_healthy
+
+    db:
+        image: postgres:16-alpine
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
-            MYSQL_EXTRA_OPTIONS: '${MYSQL_EXTRA_OPTIONS:-}'
-        volumes:
-            - 'sail-mysql:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - mysqladmin
-                - ping
-                - '-p${DB_PASSWORD}'
-            retries: 3
-            timeout: 5s
-    mailpit:
-        image: 'axllent/mailpit:latest'
+            POSTGRES_DB: chess
+            POSTGRES_USER: chess
+            POSTGRES_PASSWORD: secret
         ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        networks:
-            - sail
-    pgsql:
-        image: 'postgres:18-alpine'
-        ports:
-            - '${FORWARD_DB_PORT:-5432}:5432'
-        environment:
-            PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+            - "5432:5432"
         volumes:
-            - 'sail-pgsql:/var/lib/postgresql'
-            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
-        networks:
-            - sail
+            - pgdata:/var/lib/postgresql/data
         healthcheck:
-            test:
-                - CMD
-                - pg_isready
-                - '-q'
-                - '-d'
-                - '${DB_DATABASE}'
-                - '-U'
-                - '${DB_USERNAME}'
-            retries: 3
+            test: ["CMD-SHELL", "pg_isready -U chess"]
+            interval: 5s
             timeout: 5s
-networks:
-    sail:
-        driver: bridge
+            retries: 5
+
 volumes:
-    sail-mysql:
-        driver: local
-    sail-pgsql:
-        driver: local
+    pgdata:

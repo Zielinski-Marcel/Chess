@@ -1,7 +1,3 @@
-FROM ubuntu:latest
-LABEL authors="mziel"
-
-ENTRYPOINT ["top", "-b"]
 FROM php:8.3-fpm-alpine
 
 # Zależności systemowe

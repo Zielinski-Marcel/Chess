@@ -20,14 +20,12 @@ dusk:
 	@echo waiting for dusk
 	@docker-compose exec -it app php artisan dusk
 
-testfront:
-	@docker-compose exec -it app npm run test
 
 migrate:
 	./vendor/bin/sail artisan migrate:fresh --seed
 
 test:
-	@docker-compose exec -it app php artisan test
+	./vendor/bin/sail artisan test
 
 infection:
 	@docker-compose exec -it app vendor/bin/infection
