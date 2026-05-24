@@ -1,4 +1,3 @@
-<!-- resources/js/Pages/Chess/GameReview.vue -->
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -24,7 +23,6 @@ const props = defineProps({
     opponent:    { type: String, default: 'human' },
 })
 
-// ─── State ───────────────────────────────────────────────────────────────────
 
 const currentIndex = ref(props.moves.length - 1)
 
@@ -48,7 +46,6 @@ const fenBeforeCurrent = computed(() => {
 
 const movePairs = computed(() => buildMovePairs(props.moves))
 
-// ─── Stockfish ───────────────────────────────────────────────────────────────
 
 let sf    = null
 let sfEval = null
@@ -94,7 +91,6 @@ onMounted(() => {
 
 onUnmounted(() => { sf?.terminate(); sfEval?.terminate() })
 
-// ─── Nawigacja ────────────────────────────────────────────────────────────────
 
 function goTo(index) {
     currentIndex.value = Math.max(-1, Math.min(props.moves.length - 1, index))
@@ -114,7 +110,7 @@ function onKeydown(e) {
 onMounted(() => { window.addEventListener('keydown', onKeydown) })
 onUnmounted(() => { window.removeEventListener('keydown', onKeydown) })
 
-// ─── Highlights ───────────────────────────────────────────────────────────────
+
 
 const isBestPlay = computed(() => {
     if (!bestMove.value || !currentMove.value) return false
@@ -183,10 +179,8 @@ const displayAnalysing = computed(() => {
 
         <div class="flex justify-center items-start gap-4 py-10 px-4">
 
-            <!-- Eval bar -->
             <EvalBar :eval-cp="displayEvalCp" :eval-mate="displayEvalMate" :analysing="displayAnalysing" />
 
-            <!-- Plansza -->
             <ChessBoardComp
                 :cells="cells"
                 :cell-bg="cellBg"
@@ -194,7 +188,6 @@ const displayAnalysing = computed(() => {
                 :disabled="true"
             >
                 <template #below>
-                    <!-- Nawigacja -->
                     <div class="flex justify-center items-center gap-2 mt-4">
                         <button @click="first" :disabled="currentIndex===-1"
                                 class="px-3 py-2 rounded-lg bg-primary hover:bg-primary/80 text-secondary/70 text-sm transition disabled:opacity-30">⇐</button>
@@ -209,7 +202,6 @@ const displayAnalysing = computed(() => {
                                 class="px-3 py-2 rounded-lg bg-primary hover:bg-primary/80 text-secondary/70 text-sm transition disabled:opacity-30">⇒</button>
                     </div>
 
-                    <!-- Info -->
                     <div class="mt-3 space-y-1">
                         <div class="flex items-center justify-center text-xs">
                             <span class="flex items-center gap-1 text-yellow-300">
@@ -236,7 +228,6 @@ const displayAnalysing = computed(() => {
                 </template>
             </ChessBoardComp>
 
-            <!-- Panel ruchów -->
             <div class="w-56 bg-primary rounded-xl flex flex-col overflow-hidden" style="height:560px;">
                 <div class="px-4 py-3 border-b border-secondary/10">
                     <p class="text-xs font-semibold text-secondary/50 uppercase tracking-widest">{{ $t('moveList') }}</p>

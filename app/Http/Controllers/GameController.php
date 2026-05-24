@@ -49,7 +49,7 @@ class GameController extends Controller
     public function store(CreateGameRequest $request, CreateGameAction $action)
     {
         if ($this->activeGame->existsForUser(auth()->id())) {
-            return back()->withErrors(['active' => 'Masz już aktywną grę.']);
+            return back()->withErrors(['active' => 'Error.']);
         }
 
         $data = $request->validated();

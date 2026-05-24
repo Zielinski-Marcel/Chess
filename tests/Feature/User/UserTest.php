@@ -11,8 +11,6 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    // ─── Registration ─────────────────────────────────────────────────────────
-
     public function test_user_can_register_with_valid_data(): void
     {
         $this->postJson('/register', [

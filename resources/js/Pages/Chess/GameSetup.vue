@@ -61,7 +61,6 @@ const isVsEngine = (o) => o === 'stockfish' || o === 'myengine'
         <div class="flex items-center justify-center py-16 px-4">
             <div class="w-full max-w-md space-y-4">
 
-                <!-- Active game block -->
                 <div v-if="activeGame"
                      class="bg-primary rounded-2xl p-6 text-center">
                     <p class="text-secondary font-semibold mb-4">{{ $t('hasActiveGame') }}</p>
@@ -93,10 +92,8 @@ const isVsEngine = (o) => o === 'stockfish' || o === 'myengine'
                     </button>
                 </div>
 
-                <!-- New game form -->
                 <div v-else class="bg-primary rounded-2xl p-8 shadow-2xl">
 
-                    <!-- Opponent -->
                     <div class="mb-8">
                         <p class="text-xs font-semibold text-secondary/50 uppercase tracking-widest mb-3">
                             {{ $t('opponent') }}
@@ -116,7 +113,6 @@ const isVsEngine = (o) => o === 'stockfish' || o === 'myengine'
                         </div>
                     </div>
 
-                    <!-- Color (only vs engine) -->
                     <div v-if="isVsEngine(opponent)" class="mb-8">
                         <p class="text-xs font-semibold text-secondary/50 uppercase tracking-widest mb-3">
                             {{ $t('yourColor') }}

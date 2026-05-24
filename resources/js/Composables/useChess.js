@@ -1,9 +1,5 @@
-// resources/js/Composables/useChess.js
-// Wspólna logika szachowa dla ChessBoardPage i GameReview
-
 export const FILES = ['a','b','c','d','e','f','g','h']
 
-// ─── FEN ─────────────────────────────────────────────────────────────────────
 
 export function fenToBoard(fen) {
     const [position] = fen.split(' ')
@@ -34,7 +30,6 @@ export function boardToCells(board) {
     return board.flatMap((row, y) => row.map((piece, x) => ({ piece, x, y })))
 }
 
-// ─── Notacja ─────────────────────────────────────────────────────────────────
 
 export function moveToNotation(m) {
     if (!m) return ''
@@ -73,15 +68,12 @@ export function buildMovePairs(moves) {
 
 export function uciSquare(x, y) { return FILES[x] + (8 - y) }
 
-// ─── Kolory pól ──────────────────────────────────────────────────────────────
-
 export function isLight(x, y) { return (x + y) % 2 === 0 }
 
 export function squareColor(x, y, light = true) {
     return (x + y) % 2 === 0 ? (light ? '#f0d9b5' : '#b58863') : (light ? '#b58863' : '#f0d9b5')
 }
 
-// ─── Validator ruchów (JS port PHP validatora) ────────────────────────────────
 
 function sign(n) { return n > 0 ? 1 : n < 0 ? -1 : 0 }
 function rawColor(p) { return p === p.toUpperCase() ? 'w' : 'b' }
@@ -181,7 +173,6 @@ function moveLeavesCheck(b, fen, color, fx, fy, tx, ty) {
     copy[ty][tx] = piece
     copy[fy][fx] = null
 
-    // Bicie w przelocie — usuń bitego pionka z jego rzeczywistego pola (fy, tx)
     if (piece && piece.toLowerCase() === 'p' && tx !== fx && b[ty][tx] === null) {
         const ep = parseEp(fen)
         if (ep && ep[0] === tx && ep[1] === ty) {
@@ -237,7 +228,6 @@ export function createStockfish(onBestMove, onScore, path = '/engines/stockfish.
             if (!onBestMove) return
             const uci = msg.split(' ')[1]
             if (!uci || uci === '(none)') { onBestMove(null); return }
-            // Ignoruj stare wyniki
             if (pendingFen !== expectedFen) return
             const files = { a:0,b:1,c:2,d:3,e:4,f:5,g:6,h:7 }
             onBestMove({

@@ -53,10 +53,6 @@ class ChessValidator
         return !$this->moveLeavesKingInCheck($board, $game->fen, $pieceColor, $fromX, $fromY, $toX, $toY);
     }
 
-    // -------------------------------------------------------------------------
-    // Szach / mat / pat
-    // -------------------------------------------------------------------------
-
     public function isInCheck(array $board, string $color): bool
     {
         $kingPos = $this->findKing($board, $color);
@@ -166,10 +162,7 @@ class ChessValidator
         return false;
     }
 
-    /**
-     * Symuluje ruch i sprawdza czy własny król jest w szachu.
-     * Uwzględnia bicie w przelocie — usuwa bitego pionka z jego rzeczywistego pola.
-     */
+
     private function moveLeavesKingInCheck(
         array $board, string $fen, string $color,
         int $fromX, int $fromY, int $toX, int $toY
@@ -177,15 +170,12 @@ class ChessValidator
         $boardCopy = $board;
         $piece     = $boardCopy[$fromY][$fromX];
 
-        // Wykonaj ruch
         $boardCopy[$toY][$toX]     = $piece;
         $boardCopy[$fromY][$fromX] = null;
 
-        // Bicie w przelocie — usuń bitego pionka z jego rzeczywistego pola
         if (strtolower($piece) === 'p' && $toX !== $fromX && $board[$toY][$toX] === null) {
             $epSquare = $this->parseEnPassantSquare($fen);
             if ($epSquare !== null && $epSquare[0] === $toX && $epSquare[1] === $toY) {
-                // Bity pionek stoi na tym samym wierszu co atakujący, w kolumnie celu
                 $boardCopy[$fromY][$toX] = null;
             }
         }
@@ -205,10 +195,6 @@ class ChessValidator
 
         return null;
     }
-
-    // -------------------------------------------------------------------------
-    // Roszada
-    // -------------------------------------------------------------------------
 
     private function validateCastling(
         array $board, string $fen, string $color,
@@ -247,10 +233,6 @@ class ChessValidator
         return $castling === '-' ? [] : str_split($castling);
     }
 
-    // -------------------------------------------------------------------------
-    // En passant
-    // -------------------------------------------------------------------------
-
     private function parseEnPassantSquare(string $fen): ?array
     {
         $parts = explode(' ', $fen);
@@ -263,10 +245,6 @@ class ChessValidator
 
         return [$x, $y];
     }
-
-    // -------------------------------------------------------------------------
-    // Piece rules
-    // -------------------------------------------------------------------------
 
     private function validatePawn(
         array $board, string $piece, string $fen,
@@ -325,10 +303,6 @@ class ChessValidator
         return abs($dx) <= 1 && abs($dy) <= 1 && !($dx === 0 && $dy === 0);
     }
 
-    // -------------------------------------------------------------------------
-    // isSquareAttacked
-    // -------------------------------------------------------------------------
-
     public function isSquareAttacked(array $board, int $x, int $y, string $color): bool
     {
         $enemy = $color === 'w' ? 'b' : 'w';
@@ -367,9 +341,6 @@ class ChessValidator
         return abs($dx) === 1 && $dy === $dir;
     }
 
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
 
     private function pathIsClear(array $board, int $fromX, int $fromY, int $toX, int $toY): bool
     {

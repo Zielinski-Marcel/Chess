@@ -1,4 +1,3 @@
-<!-- resources/js/Pages/ChessBoard.vue -->
 <script setup>
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -25,8 +24,6 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-
-// ─── State ───────────────────────────────────────────────────────────────────
 
 const board          = ref(fenToBoard(props.fen))
 const selected       = ref(null)
@@ -59,7 +56,6 @@ watch(movePairs, async () => {
     if (moveListEl.value) moveListEl.value.scrollTop = moveListEl.value.scrollHeight
 }, { deep: true })
 
-// ─── Stockfish ───────────────────────────────────────────────────────────────
 
 let sf = null
 let hintCallback = null
@@ -137,8 +133,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => { sf?.terminate() })
-
-// ─── Interakcja ───────────────────────────────────────────────────────────────
 
 function onCellClick(x, y) {
     if (loading.value || promotion.value || gameOver.value) return
@@ -245,7 +239,6 @@ function handleMoveResponse(data) {
     if (isVsComputer && data.turn!==playerColor && !gameOver.value) askEngine(data.fen)
 }
 
-// ─── Highlights ───────────────────────────────────────────────────────────────
 
 function findKingSquare(color) {
     for (let y = 0; y < 8; y++)
@@ -339,7 +332,6 @@ function statusText() {
                 @click-cell="onCellClick"
             >
                 <template #modals>
-                    <!-- Promocja -->
                     <div v-if="promotion" class="absolute inset-0 flex items-center justify-center bg-black/60 rounded-xl z-10">
                         <div class="bg-gray-800 rounded-2xl p-6 shadow-2xl text-center">
                             <p class="text-white text-sm font-semibold mb-4">{{ $t('choosePiece') }}</p>
@@ -353,7 +345,6 @@ function statusText() {
                             <button @click="promotion=null; legalMoves=[]" class="text-xs text-gray-400 hover:text-white transition">{{ $t('cancel') }}</button>
                         </div>
                     </div>
-                    <!-- Koniec gry -->
                     <div v-if="gameOver && gameOver.status !== 'finished'" class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-xl z-10">
                         <div class="bg-gray-800 rounded-2xl p-8 shadow-2xl text-center">
                             <div class="text-5xl mb-4">{{ gameOver.status==='stalemate' ? '🤝' : gameOver.status==='resigned' ? '🏳' : '🏆' }}</div>
@@ -364,7 +355,6 @@ function statusText() {
                 </template>
             </ChessBoardComp>
 
-            <!-- Panel ruchów -->
             <div class="w-52 bg-primary rounded-xl flex flex-col overflow-hidden" style="height:512px;">
                 <div class="px-4 py-3 border-b border-secondary/10">
                     <p class="text-xs font-semibold text-secondary/50 uppercase tracking-widest">{{ $t('moves') }}</p>
@@ -376,7 +366,6 @@ function statusText() {
                     :to-notation="moveToNotation"
                 />
 
-                <!-- Przyciski -->
                 <div class="px-3 py-2 border-t border-secondary/10 flex flex-col gap-2">
                     <div class="flex gap-2">
                         <button @click="undo" :disabled="!canUndo"
@@ -394,7 +383,6 @@ function statusText() {
                     </button>
                 </div>
 
-                <!-- Status -->
                 <div class="px-4 py-2 border-t border-secondary/10 text-xs text-center">
                     <span :class="statusText().class">{{ statusText().text }}</span>
                 </div>
