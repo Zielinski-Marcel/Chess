@@ -15,14 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(1000)->create();
+        //User::factory(1000)->create();
         Role::firstOrCreate(['name' => 'admin']);
         Role::firstOrCreate(['name' => 'super-admin']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+//        User::factory()->create([
+//            'name' => 'Test User',
+//            'email' => 'test@example.com',
+//        ]);
 
         $user = User::firstOrCreate(
             ['email' => 'admin@example.com'],
