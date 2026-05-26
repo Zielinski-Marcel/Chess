@@ -34,13 +34,14 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user()
                     ? [
-                        'id' => $request->user()->id,
-                        'name' => $request->user()->name,
+                        'id'    => $request->user()->id,
+                        'name'  => $request->user()->name,
                         'email' => $request->user()->email,
                         'roles' => $request->user()->getRoleNames(),
                     ]
                     : null,
             ],
+            'recaptchaSiteKey' => config('services.recaptcha.sitekey'),
         ];
     }
 }

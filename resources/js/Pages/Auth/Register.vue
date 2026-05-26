@@ -5,12 +5,22 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    'g-recaptcha-response': '',
+});
+
+const onCaptchaVerified = (token) => {
+    form['g-recaptcha-response'] = token;
+};
+
+onMounted(() => {
+    window.onCaptchaVerified = onCaptchaVerified;
 });
 
 const submit = () => {
@@ -27,7 +37,6 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="name" :value="$t('name')" />
-
                 <TextInput
                     id="name"
                     type="text"
@@ -37,13 +46,11 @@ const submit = () => {
                     autofocus
                     autocomplete="name"
                 />
-
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="email" :value="$t('email')" />
-
                 <TextInput
                     id="email"
                     type="email"
@@ -52,13 +59,11 @@ const submit = () => {
                     required
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="password" :value="$t('password')" />
-
                 <TextInput
                     id="password"
                     type="password"
@@ -67,7 +72,6 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
@@ -76,7 +80,6 @@ const submit = () => {
                     for="password_confirmation"
                     :value="$t('confirmPassword')"
                 />
-
                 <TextInput
                     id="password_confirmation"
                     type="password"
@@ -85,10 +88,21 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
-
                 <InputError
                     class="mt-2"
                     :message="form.errors.password_confirmation"
+                />
+            </div>
+
+            <div class="mt-4">
+                <div
+                    class="g-recaptcha"
+                    :data-sitekey="$page.props.recaptchaSiteKey"
+                    data-callback="onCaptchaVerified"
+                ></div>
+                <InputError
+                    class="mt-2"
+                    :message="form.errors['g-recaptcha-response']"
                 />
             </div>
 
@@ -97,7 +111,7 @@ const submit = () => {
                     :href="route('login')"
                     class="rounded-md text-sm text-white underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                    {{($t('alreadyRegistered'))}}
+                    {{ $t('alreadyRegistered') }}
                 </Link>
 
                 <PrimaryButton
@@ -105,7 +119,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    {{ ($t('register')) }}
+                    {{ $t('register') }}
                 </PrimaryButton>
             </div>
         </form>

@@ -13,6 +13,7 @@
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.sitekey') }}" async defer></script>
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
