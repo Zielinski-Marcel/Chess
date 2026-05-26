@@ -24,5 +24,13 @@ class AppServiceProvider extends ServiceProvider
         Vite::prefetch(concurrency: 3);
             URL::forceScheme('https');
             URL::forceRootUrl(config('app.url'));
+        \Illuminate\Http\Request::setTrustedProxies(
+            ['*'],
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_AWS_ELB
+        );
     }
 }
