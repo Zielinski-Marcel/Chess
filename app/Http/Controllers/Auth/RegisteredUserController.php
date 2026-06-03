@@ -42,6 +42,7 @@ class RegisteredUserController extends Controller
                 ]);
 
                 $data = $response->json();
+                \Illuminate\Support\Facades\Log::info('reCAPTCHA response', $data);
 
                 if (!($data['success'] ?? false) || ($data['score'] ?? 0) < 0.5) {
                     $fail('Weryfikacja reCAPTCHA nie powiodła się.');
