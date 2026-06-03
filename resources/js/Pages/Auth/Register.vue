@@ -4,40 +4,24 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
-
-const page = usePage();
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
-    'g-recaptcha-response': '',
 });
 
-const submit = async () => {
-    const siteKey = page.props.recaptchaSiteKey;
+onMounted(() => {
+    window.onCaptchaVerified = onCaptchaVerified;
+});
 
-    if (window.grecaptcha && siteKey) {
-        window.grecaptcha.ready(async () => {
-            try {
-                const token = await window.grecaptcha.execute(siteKey, { action: 'register' });
-                form['g-recaptcha-response'] = token;
-                form.post(route('register'), {
-                    onFinish: () => form.reset('password', 'password_confirmation'),
-                });
-            } catch (e) {
-                form.post(route('register'), {
-                    onFinish: () => form.reset('password', 'password_confirmation'),
-                });
-            }
-        });
-    } else {
-        form.post(route('register'), {
-            onFinish: () => form.reset('password', 'password_confirmation'),
-        });
-    }
+const submit = () => {
+    form.post(route('register'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
 };
 </script>
 
@@ -105,10 +89,17 @@ const submit = async () => {
                 />
             </div>
 
-            <InputError
-                class="mt-2"
-                :message="form.errors['g-recaptcha-response']"
-            />
+            <div class="mt-4">
+                <div
+                    class="g-recaptcha"
+                    :data-sitekey="$page.props.recaptchaSiteKey"
+                    data-callback="onCaptchaVerified"
+                ></div>
+                <InputError
+                    class="mt-2"
+                    :message="form.errors['g-recaptcha-response']"
+                />
+            </div>
 
             <div class="mt-4 flex items-center justify-end">
                 <Link
