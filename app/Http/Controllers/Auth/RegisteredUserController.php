@@ -35,8 +35,19 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'g-recaptcha-response'  => ['required', new \Anhskohbo\NoCaptcha\Rules\CaptchaRule()],
-        ]);
+            'g-recaptcha-response' => ['required', function($attribute, $value, $fail) {
+                $response = \Illuminate\Support\Facades\Http::post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret'   => config('services.recaptcha.secretkey'),
+                    'response' => $value,
+                ]);
+
+                $data = $response->json();
+
+                if (!($data['success'] ?? false) || ($data['score'] ?? 0) < 0.5) {
+                    $fail('Weryfikacja reCAPTCHA nie powiodła się.');
+                }
+            }],
+            ]);
 
         $user = User::create([
             'name' => $request->name,
