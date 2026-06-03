@@ -23,10 +23,25 @@ onMounted(() => {
     window.onCaptchaVerified = onCaptchaVerified;
 });
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
+const submit = async () => {
+    // Odśwież token przed wysłaniem
+    if (window.grecaptcha) {
+        await window.grecaptcha.ready(async () => {
+            const token = await window.grecaptcha.execute(
+                page.props.recaptchaSiteKey,
+                { action: 'register' }
+            );
+            form['g-recaptcha-response'] = token;
+
+            form.post(route('register'), {
+                onFinish: () => form.reset('password', 'password_confirmation'),
+            });
+        });
+    } else {
+        form.post(route('register'), {
+            onFinish: () => form.reset('password', 'password_confirmation'),
+        });
+    }
 };
 </script>
 
