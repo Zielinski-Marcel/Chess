@@ -30,13 +30,13 @@ Configure your database connection in the `.env` file before proceeding.
 docker compose up -d --build
 ```
 
-### 6. Run Database Migrations
+### 5. Run Database Migrations
 
 ```bash
 make migrate
 ```
 
-### 7. Start the Application
+### 6. Start the Application
 
 Run the development environment:
 
@@ -61,3 +61,4 @@ Open the local URL displayed by Laravel in your terminal.
 - **Styling:** Tailwind CSS
 - **Build Tool:** Vite
 - **Database:** Configurable through Laravel's database settings
+- **Containerization:** Docker, Docker Compose
