@@ -47,7 +47,7 @@ Configure your database connection in the `.env` file before proceeding.
 ### 6. Run Database Migrations
 
 ```bash
-php artisan migrate
+make migrate
 ```
 
 ### 7. Start the Application
