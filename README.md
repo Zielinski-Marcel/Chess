@@ -16,33 +16,19 @@ git clone https://github.com/Zielinski-Marcel/Chess.git
 cd Chess
 ```
 
-### 3. Install PHP Dependencies
-
-```bash
-composer install
-```
-
-### 4. Install JavaScript Dependencies
-
-```bash
-npm install
-```
-
-### 5. Configure the Environment
-
-Create your local environment file:
+### 3. Create and canfigure your local environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Generate the application key:
+Configure your database connection in the `.env` file before proceeding.
+
+### 4. Build and Start Docker Containers:
 
 ```bash
-php artisan key:generate
+docker compose up -d --build
 ```
-
-Configure your database connection in the `.env` file before proceeding.
 
 ### 6. Run Database Migrations
 
